@@ -5,7 +5,6 @@ var errorCodes = require('../routes/errors');
 var Handlers = {};
 
 Handlers.logErrors = function (err, req, res, next) {
-  log.error(err.stack);
   next(err);
 };
 
