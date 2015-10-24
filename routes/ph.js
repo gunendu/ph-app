@@ -27,9 +27,7 @@ router.post('/post',function(req,res,next) {
   console.log("save post");
   var title = req.param("title");
   var url = req.param("url");
-
-  console.log("title is",title);
-   
+ 
   PostController.create(title,url)
     .then(function(response) {
       return res.status(201).send({
@@ -38,9 +36,24 @@ router.post('/post',function(req,res,next) {
       })  
     })
     .catch(function(e) {
-       console.log("creat post error"); 
+       console.log("create post error"); 
     })  
    
-});            
+});
+
+router.get('/post',function(req,res,next) {
+  console.log("get posts is called"); 
+  PostController.getPosts()
+    .then(function(response) {
+      console.log("posts is",response);
+      return res.status(200).send({
+        "status": "success",
+        "result": response
+      })   
+    })
+    .catch(function(e) {
+      console.log("get posts is called"); 
+    })  
+});  
 
 module.exports = router;
