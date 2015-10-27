@@ -9,10 +9,10 @@ var CommentController = require('ph-core').Controllers.CommentController;
 router.post('/save',function(req,res,next) {
    console.log("create user is called");
    var username = req.param("username");
-   var password = req.param("password");
-   var firstname = req.param("firstname");
+   var name = req.param("name");
+   var id = req.param("id");
 
-   UserController.saveUser(username,username,password,firstname)
+   UserController.saveUser(username,username,name,id)
      .then(function(response) {
         return res.status(201).send({
           "status": "success",
