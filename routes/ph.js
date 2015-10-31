@@ -1,10 +1,12 @@
 var express = require('express');
+var multer = require('multer');
 
 var router = express.Router();
 
 var UserController = require('ph-core').Controllers.UserController;
 var PostController = require('ph-core').Controllers.PostController;
 var CommentController = require('ph-core').Controllers.CommentController;
+var upload = multer({dest: './tmp/'});
 
 router.post('/save',function(req,res,next) {
    console.log("create user is called");
@@ -24,12 +26,12 @@ router.post('/save',function(req,res,next) {
      })   
 });
 
-router.post('/post',function(req,res,next) {
-  console.log("save post");
-  var title = req.param("title");
-  var url = req.param("url");
- 
-  PostController.create(title,url)
+router.post('/post',upload.single('image'),function(req,res,next) {
+  var file = req.file;
+  var jsondata = req.param("formdata");
+  jsondata = JSON.parse(jsondata);
+  console.log("formdata",jsondata,jsondata.title);
+  PostController.create(jsondata.title,jsondata.url,file)
     .then(function(response) {
       return res.status(201).send({
         "status": "success",
@@ -117,6 +119,17 @@ router.get('/comment/:postid', function(req,res,next) {
     .catch(function(e) {
       console.log("get comments error"); 
     })  
-});  
+});
 
+router.post('/image', upload.single('image'), function(req,res,next) {
+   var file = req.file;
+   UserController.uploadImage(file)
+     .then(function(response) {
+        return res.status(200).send({
+          "ok": true,
+          "response": response
+        });  
+     }) 
+});
+    
 module.exports = router;
