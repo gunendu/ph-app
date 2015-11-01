@@ -6,8 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var fs = require('fs');
+var jwt = require('jsonwebtoken');
 
 var ErrorHandler = require('./handlers/error-handlers');
+var utils = require('./routes/utils');
+var errorCodes = require('./routes/errors');
 
 var ph = require('./routes/ph');
 
@@ -23,11 +26,28 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
 app.use(cookieParser());
 
-app.use(function (req, res, next) { 
-  console.log("access console");  
+app.use(function (req, res, next) {
+  console.log("http method",req.method,req.url);
   res.header('Access-Control-Allow-Origin', "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, access-token");
+  if(req.method == 'GET' || req.method == 'OPTIONS' || req.url.indexOf("login")>0) {
+    console.log("access token is not required");
+    next();
+  } else {
+    console.log("access token is required");
+    var token = req.headers['access-token'];
+    console.log("token is",token,req.headers);
+    jwt.verify(token,'jwtsecret',function(err,user_id) {
+      if(err) {
+        console.log("error is",err);
+        return res.status(400).send(utils.createErrResp(errorCodes.INTERNAL_SERVER_ERR,"")) 
+      } else {
+        console.log("success fully verified user",user_id);
+        req.user_id = user_id;
+        next();
+      }   
+    })  
+  }  
 });
 
 app.use('/user', ph);

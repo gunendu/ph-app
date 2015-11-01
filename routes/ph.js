@@ -1,5 +1,6 @@
 var express = require('express');
 var multer = require('multer');
+var jwt = require('jsonwebtoken');
 
 var router = express.Router();
 
@@ -8,7 +9,7 @@ var PostController = require('ph-core').Controllers.PostController;
 var CommentController = require('ph-core').Controllers.CommentController;
 var upload = multer({dest: '/tmp/'});
 
-router.post('/save',function(req,res,next) {
+router.post('/login',function(req,res,next) {
    console.log("create user is called");
    var username = req.param("username");
    var name = req.param("name");
@@ -16,6 +17,8 @@ router.post('/save',function(req,res,next) {
 
    UserController.saveUser(username,username,name,profile_url)
      .then(function(response) {
+        var token = jwt.sign(response.insertId, 'jwtsecret');
+        response.token = token;
         return res.status(201).send({
           "status": "success",
           "result": response
@@ -132,5 +135,18 @@ router.post('/image', upload.single('image'), function(req,res,next) {
         });  
      }) 
 });
+
+router.post('/logout', function(req,res) {
+  req.session.destroy(function(err) {
+    if(err) {
+      console.log("error destroying session"); 
+    } else {
+      return res.status(200).send({
+        "status": "success",
+        "result": {} 
+      })  
+    }  
+  })  
+});  
     
 module.exports = router;
