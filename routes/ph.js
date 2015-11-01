@@ -6,15 +6,15 @@ var router = express.Router();
 var UserController = require('ph-core').Controllers.UserController;
 var PostController = require('ph-core').Controllers.PostController;
 var CommentController = require('ph-core').Controllers.CommentController;
-var upload = multer({dest: './tmp/'});
+var upload = multer({dest: '/tmp/'});
 
 router.post('/save',function(req,res,next) {
    console.log("create user is called");
    var username = req.param("username");
    var name = req.param("name");
-   var id = req.param("id");
+   var profile_url = req.param("profile_url");
 
-   UserController.saveUser(username,username,name,id)
+   UserController.saveUser(username,username,name,profile_url)
      .then(function(response) {
         return res.status(201).send({
           "status": "success",
@@ -92,8 +92,9 @@ router.post('/downvote', function(req,res,next) {
 router.post('/comment', function(req,res,next) {
    console.log("create comment is called");
    var post_id = req.param("post_id");
-   var comment = req.param("comment"); 
-   CommentController.create(post_id,comment)
+   var comment = req.param("comment");
+   var user_id = req.param("user_id"); 
+   CommentController.create(post_id,comment,user_id)
     .then(function(response) {
       return res.status(200).send({
         "status": "success",
