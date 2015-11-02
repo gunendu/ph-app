@@ -29,12 +29,12 @@ router.post('/login',function(req,res,next) {
      })   
 });
 
-router.post('/post',upload.single('image'),function(req,res,next) {
-  var file = req.file;
+router.post('/post',upload.array('image'),function(req,res,next) {
+  var files = req.files;
   var jsondata = req.param("formdata");
   jsondata = JSON.parse(jsondata);
-  console.log("formdata",jsondata,jsondata.title);
-  PostController.create(jsondata.title,jsondata.url,file)
+  console.log("formdata",jsondata,jsondata.title,files);
+  PostController.create(jsondata.user_id,jsondata.product_name,jsondata.title,jsondata.url,files)
     .then(function(response) {
       return res.status(201).send({
         "status": "success",

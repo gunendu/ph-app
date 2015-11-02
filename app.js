@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
     jwt.verify(token,'jwtsecret',function(err,user_id) {
       if(err) {
         console.log("error is",err);
-        return res.status(400).send(utils.createErrResp(errorCodes.INTERNAL_SERVER_ERR,"")) 
+        return res.status(400).send(utils.createErrResp(errorCodes.INVALID_SESSION,"")) 
       } else {
         console.log("success fully verified user",user_id);
         req.user_id = user_id;
