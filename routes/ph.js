@@ -115,6 +115,7 @@ router.get('/comment/:postid', function(req,res,next) {
   console.log("postid",postid);
   CommentController.getComments(postid)
     .then(function(response) {
+       console.log("response is",response);
        return res.status(200).send({
          "status": "success",
          "result": response 
@@ -147,6 +148,19 @@ router.post('/logout', function(req,res) {
       })  
     }  
   })  
+});
+
+router.post('/reply', function(req,res,next) {
+  var comment_id = req.param("comment_id");
+  var message = req.param("reply");
+  var user_id = req.param("user_id");  
+  CommentController.saveReply(comment_id,message,user_id)
+    .then(function(response) {
+      return res.status(200).send({
+        "ok": true,
+        "response": response 
+      });  
+    })  
 });  
     
 module.exports = router;
