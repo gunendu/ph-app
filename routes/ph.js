@@ -65,7 +65,8 @@ router.get('/post',function(req,res,next) {
 router.post('/vote', function(req,res,next) {
   console.log("vote post is called");
   var post_id = req.param("post_id");
-  PostController.votePosts(post_id)
+  var user_id = req.param("user_id");
+  PostController.votePosts(user_id,post_id)
     .then(function(response) {
       return res.status(200).send({
         "status": "success",
@@ -73,14 +74,15 @@ router.post('/vote', function(req,res,next) {
       }) 
     })
     .catch(function(e) {
-       console.log("vote posts error");  
+       console.log("vote posts error",e.stack);  
     })  
 });
 
 router.post('/downvote', function(req,res,next) {
   console.log("down vote is called");
   var post_id = req.param("post_id");
-  PostController.downvote(post_id)
+  var user_id = req.param("user_id");
+  PostController.downvote(user_id,post_id)
     .then(function(response) {
       return res.status(200).send({
         "status": "success",
@@ -159,6 +161,17 @@ router.post('/reply', function(req,res,next) {
       return res.status(200).send({
         "ok": true,
         "response": response 
+      });  
+    })  
+});
+
+router.post('/voteComment', function(req,res,next) {
+  var comment_id = req.param("comment_id");
+  CommentController.voteComment(comment_id)
+    .then(function(response) {
+      return res.status(200).send({
+        "ok": true,
+        "response": response
       });  
     })  
 });  
