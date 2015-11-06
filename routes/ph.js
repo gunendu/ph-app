@@ -167,7 +167,8 @@ router.post('/reply', function(req,res,next) {
 
 router.post('/voteComment', function(req,res,next) {
   var comment_id = req.param("comment_id");
-  CommentController.voteComment(comment_id)
+  var user_id = req.param("user_id");
+  CommentController.voteComment(user_id,comment_id)
     .then(function(response) {
       return res.status(200).send({
         "ok": true,
