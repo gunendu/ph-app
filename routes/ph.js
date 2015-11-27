@@ -175,6 +175,17 @@ router.post('/voteComment', function(req,res,next) {
         "response": response
       });  
     })  
+});
+
+router.get('/user/:userid', function(req,res,next) {
+  var userid = req.param("userid");
+  UserController.getUserUpvotedPost(userid)
+    .then(function(response) {
+       return res.status(200).send({
+         "ok": true,
+         "response": response  
+       });  
+    })  
 });  
     
 module.exports = router;
