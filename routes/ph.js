@@ -47,9 +47,10 @@ router.post('/post',upload.array('image'),function(req,res,next) {
    
 });
 
-router.get('/post',function(req,res,next) {
-  console.log("get posts is called"); 
-  PostController.getPosts()
+router.get('/post/:userid',function(req,res,next) {
+  var userid = req.param("userid"); 
+  console.log("get posts is called1",userid);
+  PostController.getPosts(userid)
     .then(function(response) {
       console.log("posts is",response);
       return res.status(200).send({
