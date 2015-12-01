@@ -7,7 +7,17 @@ var router = express.Router();
 var UserController = require('ph-core').Controllers.UserController;
 var PostController = require('ph-core').Controllers.PostController;
 var CommentController = require('ph-core').Controllers.CommentController;
-var upload = multer({dest: '/tmp/'});
+
+var storage = multer.diskStorage({
+   destination: function (req, file, cb) {
+      cb(null, '/tmp')
+   },
+   filename: function (req, file, cb) {
+     cb(null, file.originalname); // modified here  or user file.mimetype
+   }
+});
+
+var upload = multer({storage: storage});
 
 router.post('/login',function(req,res,next) {
    console.log("create user is called");
