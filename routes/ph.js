@@ -105,6 +105,22 @@ router.post('/downvote', function(req,res,next) {
     })  
 });
 
+router.post('/downVoteComment', function(req,res,next) {
+  var comment_id = req.param("comment_id");
+  var user_id = req.param("user_id");
+  console.log("comment_id and user_id",comment_id,user_id);
+  CommentController.downVote(user_id,comment_id)
+    .then(function(response) {
+       return res.status(200).send({
+          "status": "success",
+          "result": response 
+       })  
+    })
+    .catch(function(e) {
+      console.log("error downVoteComment comment"); 
+    }) 
+});  
+
 router.post('/comment', function(req,res,next) {
    console.log("create comment is called");
    var post_id = req.param("post_id");
