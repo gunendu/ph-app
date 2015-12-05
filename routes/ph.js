@@ -214,6 +214,19 @@ router.get('/votedpost/:userid', function(req,res,next) {
          "result": response  
        });  
     })  
+});
+
+router.post('/votereply', function(req,res,next) {
+   var user_id = req.param("user_id");
+   var comment_id = req.param("comment_id");
+   var reply_id = req.param("reply_id");
+   CommentController.votereply(user_id,comment_id,reply_id)
+     .then(function(response) {
+        return res.status(200).send({
+          "ok": true,
+          "result": response
+        });  
+     })   
 });  
     
 module.exports = router;
