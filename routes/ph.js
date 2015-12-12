@@ -227,6 +227,17 @@ router.post('/votereply', function(req,res,next) {
           "result": response
         });  
      })   
+});
+
+router.get('/atuser', function(req,res,next) {
+  var prefix = req.param("prefix");
+  UserController.getUserNames(prefix)
+    .then(function(response) {
+       return res.status(200).send({
+         "ok": true,
+         "result": response
+       }) 
+    }) 
 });  
     
 module.exports = router;
