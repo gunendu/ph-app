@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 var config = require('ph_config').core;
 var app = require('../app');
+var http = require('http');
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 var log = require('ph-core').Logger('express-partners');
 
 log.info("port is",config.port);
 app.set('port', config.port);
 
-var server = app.listen(app.get('port'), function() {
-  log.info('Express server listening on port ' + server.address().port);
-});
+server.listen(9005);
+
+io.on('connection',function(socket){
+   io.emit('push',{"name": "gunendu"});
+}); 

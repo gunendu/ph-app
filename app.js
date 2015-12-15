@@ -7,14 +7,17 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
+var Horntell = require('horntell');
+var config = require('ph_config').core;
+var app = express();
 
 var ErrorHandler = require('./handlers/error-handlers');
 var utils = require('./routes/utils');
 var errorCodes = require('./routes/errors');
 
-var ph = require('./routes/ph');
+Horntell.app.init(config.horntell.hornokpleasekey, config.horntell.hornokpleasesecret);
 
-var app = express();
+var ph = require('./routes/ph');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

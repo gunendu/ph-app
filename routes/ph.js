@@ -1,6 +1,9 @@
 var express = require('express');
 var multer = require('multer');
 var jwt = require('jsonwebtoken');
+var Horntell = require('horntell');
+var config = require('ph_config').core;
+var notificationservice = require('ph-core').Services.NotificationService;
 
 var router = express.Router();
 
@@ -108,7 +111,6 @@ router.post('/downvote', function(req,res,next) {
 router.post('/downVoteComment', function(req,res,next) {
   var comment_id = req.param("comment_id");
   var user_id = req.param("user_id");
-  console.log("comment_id and user_id",comment_id,user_id);
   CommentController.downVote(user_id,comment_id)
     .then(function(response) {
        return res.status(200).send({
@@ -139,12 +141,10 @@ router.post('/comment', function(req,res,next) {
 });
 
 router.get('/comment/:postid', function(req,res,next) {
-  console.log("get comments is called");
   var postid = req.params.postid;
   console.log("postid",postid);
   CommentController.getComments(postid)
     .then(function(response) {
-       console.log("response is",response);
        return res.status(200).send({
          "status": "success",
          "result": response 
